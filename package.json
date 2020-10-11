@@ -1,0 +1,22 @@
+{
+  "name": "delilah-resto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camilovce/Delilah-Resto.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/camilovce/Delilah-Resto/issues"
+  },
+  "homepage": "https://github.com/camilovce/Delilah-Resto#readme",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1"
+  }
+}
