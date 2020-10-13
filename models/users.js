@@ -6,6 +6,7 @@ const verifyUseriD = async (id) => {
     // console.log(verification)
     return verification;
 }
+// *************JWT TOKEN******************
 const generateToken = async (user) => {
     let payload = {
         id: user.id,
@@ -13,8 +14,7 @@ const generateToken = async (user) => {
         email: user.email,
         rol: user.rol
     };
-    console.log('GENERATE')
-    // console.log(payload);
+    console.log('GENERATE');
     const vtoken = jwt.sign(payload, 'camilo123');
     return vtoken;
 }
@@ -31,6 +31,13 @@ const verifyToken = async (req, res, next) => {
         res.status(401).json({ message: 'Invalid token' });
     }
 }
+// *************JWT TOKEN******************
+/* 
+*
+*
+*
+ */
+// *************CHECK ADMIN*****************
 
 const checkAdmin = (req, res, next) => {
     const { rol } = req.userData;
@@ -41,6 +48,24 @@ const checkAdmin = (req, res, next) => {
     }
 }
 
+const checkAdminOrId = async (req, res, next) => {
+    const { id, rol } = req.userData;
+    console.log(id)
+    let parametro = req.params.userId;
+    if (id == parametro || rol == 'admin') {
+        next();
+    } else {
+        res.status(400).json({ error: "User has no privileges!" })
+    }
+}
+// *************CHECK ADMIN*****************
+/* 
+*
+*
+*
+ */
+// *************LOGIN*****************
+
 const verifyUserPass = async (user, password) => {
     let query = `SELECT * FROM usuarios WHERE user = :user AND password= :password`
     let resultado = await querySelector(query, true, { user, password });
@@ -48,11 +73,8 @@ const verifyUserPass = async (user, password) => {
 }
 
 const login = async (req, res, next) => {
-    // const { id } = req.params;
     const { user, password } = req.body;
     try {
-        // let logg = await verifyUseriD(id);
-        // console.log(logg)
         let logg = await verifyUserPass(user, password);
         let valuesUser = logg[0];
         let prueba = JSON.stringify(logg);
@@ -75,12 +97,18 @@ const login = async (req, res, next) => {
         next(error);
     }
 }
+// *************LOGIN*****************
+/* *
+*
+*
+*
+* */
 
 // ****************GET USERS**********************
-const getUser = async (res, req) => {
-    const { id } = req.userData;
+const getUser = async (req, res) => {
+    const { userId } = req.params;
     try {
-        let consulta = await getUserById(id);
+        let consulta = await getUserById(userId);
         res.status(200).json({ data: consulta });
     } catch (error) {
         res.status(500).json({ error: "something went wrong" });
@@ -160,20 +188,14 @@ const createUser = async (req, res, next) => {
 
 //  ***************UPDATE USERS***********************
 const isUser = async (req, res, next) => {
-    // console.log(req.userData)
     const { id, rol } = req.userData;
-    // const { idUser } = req.params;
-
     if (rol === 'user' && req.params == id) {
-        // res.status(200).json({})
         next();
     } else {
-        // console.log(idUser);
         res.status(401).json({ error: 'You have no rights to make this request' });
     }
 }
 const updateU = async (id, newDataUser) => {
-    // const newData = req.body;
     const { user, name, email, phone, address, password } = newDataUser;
     const usuario = await getUserById(id);
     console.log('UPDATEU')
@@ -186,7 +208,6 @@ const updateU = async (id, newDataUser) => {
     address = '${address || usuario.address}',
     password = '${password || usuario.password}'
     WHERE id = ${usuario.id}`;
-    // console.log(query)
     await querySelector(query)
 }
 const updateUser = async (req, res, next) => {
@@ -230,24 +251,19 @@ const deleteUser = async (req, res, next) => {
         next(error);
     }
 }
-const checkAdminOrId = async (req, res, next) => {
-    const { idCheck, rol } = req.userData;
-    if (idCheck || rol == 'admin') {
-        next();
-    } else {
-        res.status(400).json({ error: "User has no privileges!" })
-    }
-}
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDI1MzYyNTl9.r99cnR6YGoWp_I3M19XR1hX0QHdFXbddrA5q_VzNRGQ;
-
+//  ***************DELETE USERS***********************
+/* *
+*
+*
+*
+* *******************************************************/
 function routesUsers(app) {
     app.post('/usuarios/signin', login);
     app.get('/usuarios', verifyToken, checkAdmin, getUsers);
     app.post('/usuarios', createUser);
     app.put('/usuarios/:userId', verifyToken, checkAdmin, updateUser);
     app.delete('/usuarios/:userId', verifyToken, checkAdmin, deleteUser);
-    app.get('/users/:userId', verifyToken, checkAdminOrId, getUserById);
+    app.get('/usuarios/:userId', verifyToken, checkAdminOrId, getUser);
 }
 
 module.exports = {

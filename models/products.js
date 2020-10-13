@@ -163,9 +163,6 @@ const updateProduct = async (req, res, next) => {
         next(error);
     }
 }
-// app.put('/products/:id', userController.verifyUserIdRequestAndRole,
-//     productController.verifyIfProductExistsById, productController.updateProduct);
-// app.put('/products/:id', verifyIfProductExistsById, updateProduct);
 
 // *************MODIFY A PRODUCT****************
 
@@ -202,7 +199,6 @@ function routes(app) {
     app.get('/productos', getProducts);
     app.get('/productos/:id', getProductsiD);
 }
-// app.delete('/productos/:id', verifyIfProductExistsById, deleteProduct);
 // *************DELETE A PRODUCT****************
 
 module.exports = {
