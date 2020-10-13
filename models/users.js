@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const verifyUseriD = async (id) => {
     let query = `SELECT * FROM usuarios WHERE id=:id`;
     let verification = await querySelector(query, true, { id });
-    console.log(verification)
+    // console.log(verification)
     return verification;
 }
 const generateToken = async (user) => {
@@ -14,25 +14,16 @@ const generateToken = async (user) => {
         rol: user.rol
     };
     console.log('GENERATE')
-    console.log(payload);
+    // console.log(payload);
     const vtoken = jwt.sign(payload, 'camilo123');
     return vtoken;
 }
-
-// const vToken = async (req, res, next) => {
-//     const { authorization } = req.headers;
-
-//     const token = authorization && authorization.split(' ')[1];
-//     const userData = await jwt.verify(token, 'camilo123');
-//     return userData;
-// }
-
 
 const verifyToken = async (req, res, next) => {
     const { authorization } = req.headers;
     const token = authorization && authorization.split(' ')[1];
     const userData = await jwt.verify(token, 'camilo123');
-    console.log(userData)
+    // console.log(userData)
     if (userData) {
         req.userData = userData;
         next();
@@ -42,10 +33,6 @@ const verifyToken = async (req, res, next) => {
 }
 
 const checkAdmin = (req, res, next) => {
-    // const { idUser } = req.params;
-    // const userTokenId = req.userData.id;
-    // idUser == userTokenId || 
-    console.log(req.userData)
     const { rol } = req.userData;
     if (rol === 'admin') {
         next();
@@ -72,7 +59,7 @@ const login = async (req, res, next) => {
         if (prueba === '[]') {
             res.status(404).json({ error: `email or password are incorrect!` })
         } else {
-            console.log(logg)
+            // console.log(logg)
             let objetoToken = {
                 id: valuesUser.id,
                 user: valuesUser.user,
@@ -80,7 +67,7 @@ const login = async (req, res, next) => {
                 rol: valuesUser.rol
             };
             console.log('LOGIn')
-            console.log(objetoToken)
+            // console.log(objetoToken)
             let token = await generateToken(objetoToken);
             res.status(201).json({ data: token });
         }
@@ -90,7 +77,15 @@ const login = async (req, res, next) => {
 }
 
 // ****************GET USERS**********************
-
+const getUser = async (res, req) => {
+    const { id } = req.userData;
+    try {
+        let consulta = await getUserById(id);
+        res.status(200).json({ data: consulta });
+    } catch (error) {
+        res.status(500).json({ error: "something went wrong" });
+    }
+}
 const getUsers = async (req, res) => {
     let query = `SELECT * FROM usuarios`;
     try {
@@ -155,7 +150,7 @@ const createUser = async (req, res, next) => {
         next(error);
     }
 }
-// ****************GET USERS**********************
+// ****************CREATE USER**********************
 /* 
 *
 *
@@ -167,9 +162,9 @@ const createUser = async (req, res, next) => {
 const isUser = async (req, res, next) => {
     // console.log(req.userData)
     const { id, rol } = req.userData;
-    const { idUser } = req.params;
+    // const { idUser } = req.params;
 
-    if (rol === 'user' && idUser == id) {
+    if (rol === 'user' && req.params == id) {
         // res.status(200).json({})
         next();
     } else {
@@ -177,27 +172,35 @@ const isUser = async (req, res, next) => {
         res.status(401).json({ error: 'You have no rights to make this request' });
     }
 }
-const updateU = async (id) => {
-    const newData = req.body;
-    const usuario = getUserById(id);
+const updateU = async (id, newDataUser) => {
+    // const newData = req.body;
+    const { user, name, email, phone, address, password } = newDataUser;
+    const usuario = await getUserById(id);
     console.log('UPDATEU')
-    console.log(usuario)
-    const query = `UPDATE usuarios
-    SET user = '${usuario.user || newData.user}',
-    name = '${usuario.name || newData.name}',
-    email = '${usuario.email || newData.email}',
-    phone = '${usuario.phone || newData.phone}',
-    address = '${usuario.address || newData.address}',
-    password = '${usuario.password || newData.password}'
+    const query = `
+    UPDATE usuarios
+    SET user = '${user || usuario.user}',
+    name = '${name || usuario.name}',
+    email = '${email || usuario.email}',
+    phone = '${phone || usuario.phone}',
+    address = '${address || usuario.address}',
+    password = '${password || usuario.password}'
     WHERE id = ${usuario.id}`;
+    // console.log(query)
     await querySelector(query)
 }
 const updateUser = async (req, res, next) => {
     const { userId } = req.params;
-    // const userData = req.body;
+    const userData2 = req.body;
+    const { id } = req.userData;
+
     try {
-        await updateU(userId);
-        res.status(200).json({ data: userId, response: "Usuario actualizado!" });
+        if (userId == id) {
+            await updateU(userId, userData2);
+            res.status(200).json({ data: "Usuario actualizado con éxito!" });
+        } else {
+            res.status(404).json({ data: "El id ingresado no es valido!" });
+        }
     } catch (error) {
         next(error);
     }
@@ -210,8 +213,31 @@ const updateUser = async (req, res, next) => {
 *
 *
  */
+//  ***************DELETE USERS***********************
 
+const deleteU = async (id) => {
+    const query = `DELETE FROM usuarios WHERE id=${id}`;
+    console.log(query)
+    await querySelector(query);
+}
 
+const deleteUser = async (req, res, next) => {
+    const { userId } = req.params;
+    try {
+        await deleteU(userId);
+        res.status(200).json({ data: userId, info: "Usuario elminado con éxito!" });
+    } catch (error) {
+        next(error);
+    }
+}
+const checkAdminOrId = async (req, res, next) => {
+    const { idCheck, rol } = req.userData;
+    if (idCheck || rol == 'admin') {
+        next();
+    } else {
+        res.status(400).json({ error: "User has no privileges!" })
+    }
+}
 
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDI1MzYyNTl9.r99cnR6YGoWp_I3M19XR1hX0QHdFXbddrA5q_VzNRGQ;
 
@@ -219,18 +245,12 @@ function routesUsers(app) {
     app.post('/usuarios/signin', login);
     app.get('/usuarios', verifyToken, checkAdmin, getUsers);
     app.post('/usuarios', createUser);
-    app.put('/usuarios/:userId', verifyToken, isUser, updateUser);
-    /*   
-  
-      
-  
-      app.get('/users/:userId', authController.verifyToken, userController.verifyUserIdRequestAndRole,
-          userController.verifyIfUserExistsById, userController.getUserById);
-  
-      app.delete('/users/:userId', authController.verifyToken, userController.verifyUserIdRequestAndRole,
-          userController.verifyIfUserExistsById, userController.deleteUser); */
+    app.put('/usuarios/:userId', verifyToken, checkAdmin, updateUser);
+    app.delete('/usuarios/:userId', verifyToken, checkAdmin, deleteUser);
+    app.get('/users/:userId', verifyToken, checkAdminOrId, getUserById);
 }
 
 module.exports = {
     routesUsers,
+    isUser
 }

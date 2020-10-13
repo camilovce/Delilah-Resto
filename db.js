@@ -16,12 +16,18 @@ async function querySelector(query, selectQ = false, replacements = {}) {
         typeQ = undefined;
     }
     console.log(replacements)
-    let consulta = await db.query(query, {
-        type: typeQ,
-        raw: true,
-        replacements
-    })
-    return consulta;
+    try {
+        let consulta = await db.query(query, {
+            type: typeQ,
+            raw: true,
+            replacements
+        })
+        return consulta;
+    } catch (error) {
+        console.log(error);
+    }
+
+
 }
 
 module.exports = {
