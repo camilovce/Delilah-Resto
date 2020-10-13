@@ -1,10 +1,10 @@
 // const { query } = require('express');
-const { db } = require('../db');
-
+const { querySelector, db } = require('../db');
+// console.log(querySelector + 'asdfdf')
 // db = require('./db');
 
 // (async () => {
-//     await db.query(
+//     await query(
 //         'CREATE TABLE IF NOT EXISTS usuarios (id INT PRIMARY KEY AUTO_INCREMENT, email VARCHAR (60) UNIQUE NOT NULL, nombre VARCHAR (60) NOT NULL,  edad INT UNSIGNED NOT NULL)',
 //         { raw: true },
 //     );
@@ -16,7 +16,7 @@ const { db } = require('../db');
 
 
 // const crearP = async () => {
-//     await db.query(
+//     await query(
 //         `SELECT* FROM `
 //     );
 // };
@@ -31,7 +31,7 @@ const verifyIfProductExistsById = async (req, res, next) => {
     const { id } = req.params;
 
     try {
-        const product = await productServices.getProductById(id);
+        const product = await getProductById(id);
 
         if (!product) {
             res.status(404).json({ error: `Product with id: ${id} does not exist! ` });
@@ -46,42 +46,72 @@ const verifyIfProductExistsById = async (req, res, next) => {
 
 
 // const Product = require('../model/Product');
-const database = require('../db');
+// const database = require('../db');
 
 /**
  * Get all products.
  */
 
-async function getProducts(req, res, next) {
+const getProducts = async (req, res, next) => {
     try {
         const query = 'SELECT * FROM productos;';
-        const consulta = await db.querySelector(query, true);
+        const consulta = await querySelector(query, true,);
         res.status(200).json({ data: consulta });
     } catch (error) {
         next(error);
     }
 }
-app.get(`/productos`, getProducts);
+const getProductByName = async (nombreProducto) => {
+    const query = 'SELECT * FROM productos WHERE nombreProducto = :nombreProducto;';
+
+    const result = await querySelector(query, true, { nombreProducto });
+
+    return result[0];
+}
 
 const getProductById = async (id) => {
-    const query = 'SELECT * FROM Product WHERE id = :id;';
-    const consulta = await db.querySelector(query, true, { id });
-    return consulta[0];
+    const query = 'SELECT * FROM productos WHERE id = :id;';
+    const consulta = await querySelector(query, true, { id });
+    if (consulta == 'undefined') {
+        return consulta[0];
+    } else {
+        console.log('Product by given id does not exist!')
+    }
 }
+
+const getProductsiD = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        let resultado = await getProductById(id);
+        res.status(200).json({ data: resultado });
+
+        // const query = 'SELECT * FROM productos;';
+        // const consulta = await querySelector(query, true,);
+        // res.status(200).json({ data: consulta });
+    } catch (error) {
+        next(error);
+    }
+}
+// app.get(`/productos`, getProducts);
+
+
 
 // *************CREATING A PRODUCT****************
 const createP = async (replacements) => {
     const query = `INSERT INTO productos (nombreProducto, precio, cantidad)
         VALUES (:nombreProducto, :precio, :cantidad);`;
-    const result = await db.querySelector(query, false, replacements);
+    const result = await querySelector(query, false, replacements);
     return result[0];
 }
 
+
 const createProduct = async (req, res, next) => {
     const { nombreProducto, precio, cantidad } = req.body;
+    console.log(req.body)
 
     try {
-        const productName = await createP(nombreProducto);
+        const productName = await getProductByName(nombreProducto);
+        console.log('asdfasdf')
 
         if (productName) {
             res.status(409).json({ error: `${nombreProducto} already exists` });
@@ -89,6 +119,7 @@ const createProduct = async (req, res, next) => {
         }
 
         if (cantidad && nombreProducto && precio) {
+            console.log('asdfasdf')
             const productId = await createP(req.body);
             res.status(201).json({ data: productId });
         } else {
@@ -120,14 +151,14 @@ const modifyProduct = async (id, replacements) => {
         precio = ${precio || product.precio},
         cantidad = ${cantidad || product.cantidad}
         WHERE id = ${id};`;
-    await db.querySelector(query);
+    await querySelector(query);
 }
 
 const updateProduct = async (req, res, next) => {
-    const { productId } = req.params;
+    const { id } = req.params;
     try {
-        await modifyProduct(productId, req.body);
-        res.status(200).json({ data: productId });
+        await modifyProduct(id, req.body);
+        res.status(200).json({ data: id });
     } catch (error) {
         next(error);
     }
@@ -141,22 +172,35 @@ const updateProduct = async (req, res, next) => {
 
 // *************DELETE A PRODUCT****************
 
-const deleteProduct = async (id) => {
-    const query = 'DELETE FROM Product WHERE id = :id;';
+const deleteP = async (id) => {
+    const query = 'DELETE FROM productos WHERE id = :id;';
     try {
-        await db.querySelector(query, false, { id });
+        await querySelector(query, false, { id });
 
     } catch (error) {
         console.log(error)
     }
 }
 
+const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await deleteP(id);
+        res.status(200).json({ data: id })
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
+
 function routes(app) {
     app.delete('/productos/:id', verifyIfProductExistsById, deleteProduct);
-    app.put('/products/:id', verifyIfProductExistsById, updateProduct);
+    app.put('/productos/:id', verifyIfProductExistsById, updateProduct);
     app.post('/productos', createProduct);
     app.get('/productos', getProducts);
-
+    app.get('/productos/:id', getProductsiD);
 }
 // app.delete('/productos/:id', verifyIfProductExistsById, deleteProduct);
 // *************DELETE A PRODUCT****************

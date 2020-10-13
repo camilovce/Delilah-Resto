@@ -7,7 +7,7 @@ const db = new Sequelize("Delilah", "root", "Camilo123", {
 });
 
 // Use QueryTypes SELECT Method whenever is needed
-const querySelector = async (query, selectQ = false, replacements = {}) => {
+async function querySelector(query, selectQ = false, replacements = {}) {
     console.log(selectQ);
     let typeQ;
     if (selectQ) {
@@ -15,6 +15,7 @@ const querySelector = async (query, selectQ = false, replacements = {}) => {
     } else {
         typeQ = undefined;
     }
+    console.log(replacements)
     let consulta = await db.query(query, {
         type: typeQ,
         raw: true,

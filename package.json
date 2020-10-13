@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/camilovce/Delilah-Resto#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1"
   }
 }
