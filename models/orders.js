@@ -20,7 +20,7 @@ const getO = async () => {
 const getOrders = async (req, res, next) => {
     try {
         const orders = await getO();
-        console.log(orders);
+        // console.log(orders);
         res.status(200).json({ data: orders });
     } catch (error) {
         next(error);
@@ -58,33 +58,56 @@ const getOrderById = async (req, res, next) => {
 ***
 **/
 // ********************CREATE ORDER ***************************************
+function listAllProperties(o) {
+    var objectToInspect;
+    var result = [];
+    for (objectToInspect = o; objectToInspect !== null;
+        objectToInspect = Object.getPrototypeOf(objectToInspect)) {
+        result = result.concat(
+            Object.getOwnPropertyNames(objectToInspect)
+        );
+    }
+    return result;
+}
 
-const descriptionCreator = async (productsiDsArray) => {
+// ********************
+const descriptionCreator = async (productsiDsArray, idUser) => {
+
     let orderDescription = '';
     let productOrderName;
     var count = {};
     productsiDsArray.forEach(function (i) { count[i] = (count[i] || 0) + 1; });
     let lenghtObj = Object.keys(count).length;
     let iDsNoRepeated = listAllProperties(count).splice(0, lenghtObj);
+    let totalOrderPrice = 0;
     const query = `SELECT nombreProducto FROM productos WHERE id = :id`;
+    const queryQty = `SELECT precio FROM productos WHERE id = :id`;
     iDsNoRepeated.forEach(async id => {
-        productOrderName = await querySelector(query, true, id);
-        orderDescription += count[iDsNoRepeated[i]] + 'x' + productOrderName[0].user + ' ';
+        productOrderName = await querySelector(query, true, { id: idUser });
+        productOrderPrice = await querySelector(queryQty, true, { id: idUser })
+        orderDescription += count[iDsNoRepeated[i]] + 'x' + productOrderName[0].nombreProducto + ' ';
+        totalOrderPrice += count[iDsNoRepeated[i]] * productOrderPrice[0].precio;
     });
-    return [orderDescription, iDsNoRepeated];
+
+    return [orderDescription, iDsNoRepeated, totalOrderPrice];
 };
+
+
 
 const createO = async (iDUser, orderBody) => {
     orderBody.userId = iDUser;
-    const [orderDescription, iDsNoRepeated] = await descriptionCreator(orderBody.products);
+    const [orderDescription, iDsNoRepeated, totalOrderPrice] = await descriptionCreator(orderBody.products, iDUser);
     // orderBody.description = await descriptionCreator(orderBody.products)[0];
     orderBody.description = orderDescription;
     orderBody.products = iDsNoRepeated;
+    orderBody.total = totalOrderPrice;
     orderBody.time = moment().format('LT');
-    console.log(orderBody.description);
+    console.log(orderBody);
+
+    // console.log(orderBody.description);
     const query = `
         INSERT INTO ordenes (time, description, payment, userId, total,address)
-        VALUES (:time, :description, :payment, :userId, :total,address);
+        VALUES (:time, :description, :payment, :userId, :total,:address);
     `;
 
     const result = await querySelector(query, false, orderBody);
@@ -93,7 +116,7 @@ const createO = async (iDUser, orderBody) => {
         INSERT INTO productosOrdenes (idOrdenes, idProductos)
         VALUES (:idOrdenes, :idProductos)
     `;
-
+    // console.log(result)
     orderBody.products.forEach(async idProductos => {
         await querySelector(orderProductQuery, false, { idOrdenes: result[0], idProductos });
     });
@@ -102,11 +125,11 @@ const createO = async (iDUser, orderBody) => {
 }
 
 const createOrder = async (req, res, next) => {
+    console.log(req.userData)
     const { id } = req.userData;
-    (time, description, payment, userId, total)
-    const { time, description, payment, total, products } = req.body;
-
-    if (description && time && payment && total && products) {
+    const { payment, products, address } = req.body;
+    // console.log(description)
+    if (payment && products && address) {
         try {
             const orderId = await createO(id, req.body);
             res.status(201).json({ data: orderId });
