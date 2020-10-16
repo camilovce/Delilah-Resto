@@ -1,12 +1,12 @@
-const { db, querySelector } = require('../config/database');
-const { verifyToken, checkAdminOrId, get } = require('../models/users');
+const { querySelector } = require('../db');
+const { verifyToken, checkAdminOrId, checkAdmin } = require('../models/users');
 const moment = require('moment');
 
 
 
 // ********************GET ORDER ***************************************
 
-const getOrders = async () => {
+const getO = async () => {
     // const query = `
     //     SELECT  state, time, payment, nombreProducto FROM ordenes 
     //     JOIN productosOrdenes ON ordenes.id = productosOrdenes.idOrdenes 
@@ -19,8 +19,8 @@ const getOrders = async () => {
 
 const getOrders = async (req, res, next) => {
     try {
-        const orders = await orderServices.getOrders();
-
+        const orders = await getO();
+        console.log(orders);
         res.status(200).json({ data: orders });
     } catch (error) {
         next(error);
@@ -74,7 +74,7 @@ const descriptionCreator = async (productsiDsArray) => {
     return [orderDescription, iDsNoRepeated];
 };
 
-const createOrder = async (iDUser, orderBody) => {
+const createO = async (iDUser, orderBody) => {
     orderBody.userId = iDUser;
     const [orderDescription, iDsNoRepeated] = await descriptionCreator(orderBody.products);
     // orderBody.description = await descriptionCreator(orderBody.products)[0];
@@ -108,7 +108,7 @@ const createOrder = async (req, res, next) => {
 
     if (description && time && payment && total && products) {
         try {
-            const orderId = await createOrder(id, req.body);
+            const orderId = await createO(id, req.body);
             res.status(201).json({ data: orderId });
         } catch (error) {
             next(error);
@@ -130,7 +130,7 @@ const createOrder = async (req, res, next) => {
 /**
  ********************UPDATE ORDER***************************************
  */
-const updateOrder = async (id, orderBody) => {
+const updateO = async (id, orderBody) => {
     const { state } = orderBody;
     const order = await getOrderById(id);
     const [orderDescription] = await descriptionCreator(order.products);
@@ -148,7 +148,7 @@ const updateOrder = async (req, res, next) => {
     const { id } = req.params;
 
     try {
-        await updateOrder(id, orderBody);
+        await updateO(id, orderBody);
         let newState = await getOrderById(id);
         res.status(200).json({ data: id, newState: newState.state });
     } catch (error) {
@@ -186,33 +186,72 @@ const deleteOrder = async (req, res, next) => {
 
 /**
  ********************DELETE ORDER***************************************
+**
+*
+**
+*
+*
 *
 **/
+/**
+ * 
+ * ************** GET USER ORDERS**************************
+ *  */
+const getUserO = async (userId) => {
+    const query = 'SELECT * FROM ordenes WHERE userId = :userId';
+    const result = await querySelector(query, true, { userId });
+    return result[0];
+}
+const getUserOrders = async (req, res, next) => {
+    const { id } = req.params;
 
+    try {
+        const orders = await getUserO(id);
+        res.status(200).json({ data: orders });
+    } catch (error) {
+        next(error);
+    }
+}
+/**
+ * 
+ * ************** GET USER ORDERS**************************
+ *  */
 
+/**
+ * 
+ * 
+ * *************GET ORDER PRODUCTS*************
+ */
+const getOrderP = async (orderId) => {
+    const query = `
+        SELECT nombreProducto, precio FROM productos
+        JOIN productosOrdenes ON productos.id = productosOrdenes.idProductos
+        WHERE productosOrdenes.idOrdenes = :orderId;
+    `;
+    const result = querySelector(query, true, { orderId });
+    return result[0];
+}
 
-const getUserOrders = async (userId) => {
-    const query = 'SELECT * FROM ResOrder WHERE userId = :userId';
-    const result = await database.executeQuery(query, true, { userId });
-    return result;
+const getOrderProducts = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const products = await getOrderP(id);
+        res.status(200).json({ data: products });
+    } catch (error) {
+        next(error);
+    }
 }
 
 /**
- * Get products from order.
- * @param {Number} orderId Order id.
- * @returns {Array} Order products list.
+ * 
+ * 
+ * *************GET ORDER PRODUCTS*************
+ * 
+ * 
+ * 
+ * 
+ * 
  */
-const getOrderProducts = async (orderId) => {
-    const query = `
-        SELECT name, price FROM Product
-        JOIN OrderProduct ON Product.id = OrderProduct.productId
-        WHERE OrderProduct.orderId = :orderId;
-    `;
-
-    const result = database.executeQuery(query, true, { orderId });
-
-    return result;
-}
 
 module.exports = {
     getOrders,
@@ -231,37 +270,13 @@ module.exports = {
 // ******************************************************
 
 
-const getUserOrders = async (req, res, next) => {
-    const { id } = req.params;
-
-    try {
-        const orders = await orderServices.getUserOrders(id);
-
-        res.status(200).json({ data: orders });
-    } catch (error) {
-        next(error);
-    }
-}
 
 
-const getOrderProducts = async (req, res, next) => {
-    const { id } = req.params;
-
-    try {
-        const products = await orderServices.getOrderProducts(id);
-
-        res.status(200).json({ data: products });
-    } catch (error) {
-        next(error);
-    }
-}
 
 const verifyIfOrderExists = async (req, res, next) => {
     const { id } = req.params;
-
     try {
-        const order = await orderServices.getOrderById(id);
-
+        const order = await getOrderByIdQuery(id);
         if (!order) {
             res.status(404).json({ error: `Order with id ${id} not found` });
         } else {
@@ -273,17 +288,6 @@ const verifyIfOrderExists = async (req, res, next) => {
     }
 }
 
-module.exports = {
-    getOrders,
-    getOrderById,
-    createOrder,
-    updateOrder,
-    deleteOrder,
-    getUserOrders,
-    verifyIfOrderExists,
-    getOrderProducts
-};
-
 // ******************************************************
 // ******************************************************
 // ******************************************************
@@ -292,34 +296,29 @@ module.exports = {
 // ******************************************************
 // ******************************************************
 
-
-const orderController = require('../controller/orderController');
-const userController = require('../controller/userController');
-const authController = require('../controller/authController');
 
 /**
  * 
  * @param {import('express').Express} app 
  */
-module.exports = (app) => {
-    app.use('/orders', verifyToken);
 
-    app.get('/orders', checkAdminOrId, orderController.getOrders);
+function routesOrders(app) {
+    app.use('/ordenes', verifyToken);
 
-    app.post('/orders', orderController.createOrder);
+    app.get('/ordenes', checkAdmin, getOrders);
 
-    app.get('/orders/:id', checkAdminOrId,
-        orderController.verifyIfOrderExists, orderController.getOrderById);
+    app.post('/ordenes', createOrder);
 
-    app.put('/orders/:id', checkAdminOrId,
-        orderController.verifyIfOrderExists, orderController.updateOrder);
+    app.get('/ordenes/:id', checkAdminOrId, verifyIfOrderExists, getOrderById);
 
-    app.delete('/orders/:id', checkAdminOrId,
-        orderController.verifyIfOrderExists, orderController.deleteOrder);
+    app.put('/ordenes/:id', checkAdminOrId, verifyIfOrderExists, updateOrder);
 
-    app.get('/orders/users/:id', authController.verifyToken, checkAdminOrId,
-        userController.verifyIfUserExistsById, orderController.getUserOrders);
+    app.delete('/ordenes/:id', checkAdminOrId, verifyIfOrderExists, deleteOrder);
 
-    app.get('/orders/:id/products', checkAdminOrId,
-        orderController.verifyIfOrderExists, orderController.getOrderProducts);
+    app.get('/ordenes/users/:id', verifyToken, checkAdminOrId, getUserOrders);
+
+    app.get('/ordenes/:id/products', checkAdminOrId, verifyIfOrderExists, getOrderProducts);
+}
+module.exports = {
+    routesOrders
 }

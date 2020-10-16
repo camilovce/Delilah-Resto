@@ -1,4 +1,4 @@
-const { db, querySelector } = require('./db');
+const { db } = require('./db');
 
 
 (async () => {

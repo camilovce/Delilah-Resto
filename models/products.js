@@ -167,7 +167,7 @@ const deleteProduct = async (req, res) => {
 
 
 
-function routes(app) {
+function routesProducts(app) {
     app.use('/productos', verifyToken)
     app.delete('/productos/:id', verifyIfProductExistsById, deleteProduct);
     app.put('/productos/:id', verifyIfProductExistsById, updateProduct);
@@ -184,5 +184,5 @@ module.exports = {
     createProduct,
     deleteProduct,
     updateProduct,
-    routes,
+    routesProducts,
 };

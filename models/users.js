@@ -275,5 +275,6 @@ module.exports = {
     routesUsers,
     isUser,
     verifyToken,
-    checkAdminOrId
+    checkAdminOrId,
+    checkAdmin
 }

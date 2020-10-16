@@ -1,6 +1,7 @@
 const { db } = require('./db');
-const { routes } = require('./models/products');
+const { routesProducts } = require('./models/products');
 const { routesUsers } = require('./models/users');
+const { routesOrders } = require('./models/orders');
 const bodyParser = require('body-parser');
 const express = require('express');
 const server = express();
@@ -9,8 +10,9 @@ const moment = require('moment');
 server.use(cors());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
-routes(server);
+routesProducts(server);
 routesUsers(server);
+routesOrders(server);
 server.listen(3000, () => {
     db.authenticate()
         .then(data => {
