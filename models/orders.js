@@ -1,5 +1,5 @@
 const { db, querySelector } = require('../config/database');
-const { verifyToken, checkAdminOrId } = require('../models/users');
+const { verifyToken, checkAdminOrId, get } = require('../models/users');
 const moment = require('moment');
 
 /**
@@ -44,19 +44,6 @@ ON af.auto_feature_id = a2af.auto_feature_id
 WHERE a2af.auto_id = 7;`
 }
 
-function listAllProperties(o) {
-    var objectToInspect;
-    var result = [];
-
-    for (objectToInspect = o; objectToInspect !== null;
-        objectToInspect = Object.getPrototypeOf(objectToInspect)) {
-        result = result.concat(
-            Object.getOwnPropertyNames(objectToInspect)
-        );
-    }
-
-    return result;
-}
 
 const descriptionCreator = async (productsiDsArray) => {
     let orderDescription = '';
@@ -70,33 +57,42 @@ const descriptionCreator = async (productsiDsArray) => {
         productOrderName = await querySelector(query, true, id);
         orderDescription += count[iDsNoRepeated[i]] + 'x' + productOrderName[0].user + ' ';
     });
-    return orderDescription;
+    return [orderDescription, iDsNoRepeated];
 };
 
 
 
 const createOrder = async (iDUser, orderBody) => {
     orderBody.userId = iDUser;
-    orderBody.description = await descriptionCreator(orderBody.products);
+    const [orderDescription, iDsNoRepeated] = await descriptionCreator(orderBody.products);
+    // orderBody.description = await descriptionCreator(orderBody.products)[0];
+    orderBody.description = orderDescription;
+    orderBody.products = iDsNoRepeated;
+    orderBody.time = moment().format('LT');
     console.log(orderBody.description);
     const query = `
-        INSERT INTO ordenes (state, time, description, payment, userId, total)
-        VALUES (:state, :time, :description, :payment, :userId, :total);
+        INSERT INTO ordenes (time, description, payment, userId, total)
+        VALUES (:time, :description, :payment, :userId, :total);
     `;
+
     const result = await querySelector(query, false, orderBody);
+
     const orderProductQuery = `
-        INSERT INTO productosOrdenes (idOrdenes, idProducto)
-        VALUES (:idOrdenes, :idProducto)
+        INSERT INTO productosOrdenes (idOrdenes, idProductos)
+        VALUES (:idOrdenes, :idProductos)
     `;
-    orderBody.products.forEach(async productId => {
-        await querySelector(orderProductQuery, false, { orderId: result[0], productId });
+
+    orderBody.products.forEach(async idProductos => {
+        await querySelector(orderProductQuery, false, { idOrdenes: result[0], idProductos });
     });
+
     return result[0];
 }
 
 const createOrder = async (req, res, next) => {
     const { id } = req.userData;
-    const { description, time, state, wayToPay, total, products } = req.body;
+    (time, description, payment, userId, total)
+    const { time, description, payment, total, products } = req.body;
 
     if (description && time && state && wayToPay && total && products) {
         try {
@@ -148,7 +144,6 @@ const deleteOrder = async (id) => {
 const getUserOrders = async (userId) => {
     const query = 'SELECT * FROM ResOrder WHERE userId = :userId';
     const result = await database.executeQuery(query, true, { userId });
-
     return result;
 }
 
