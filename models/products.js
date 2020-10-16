@@ -1,27 +1,6 @@
-// const { query } = require('express');
+const { verify } = require('jsonwebtoken');
 const { querySelector, db } = require('../db');
-// console.log(querySelector + 'asdfdf')
-// db = require('./db');
-
-// (async () => {
-//     await query(
-//         'CREATE TABLE IF NOT EXISTS usuarios (id INT PRIMARY KEY AUTO_INCREMENT, email VARCHAR (60) UNIQUE NOT NULL, nombre VARCHAR (60) NOT NULL,  edad INT UNSIGNED NOT NULL)',
-//         { raw: true },
-//     );
-//     console.log('escuchando!');
-
-
-// })();
-
-
-
-// const crearP = async () => {
-//     await query(
-//         `SELECT* FROM `
-//     );
-// };
-
-
+const { verifyToken } = require('../models/users');
 // *********************************************************
 //**************** */ PRODUCT SERVICES*******************
 // *********************************************************
@@ -43,10 +22,6 @@ const verifyIfProductExistsById = async (req, res, next) => {
         next(error);
     }
 }
-
-
-// const Product = require('../model/Product');
-// const database = require('../db');
 
 /**
  * Get all products.
@@ -73,9 +48,9 @@ const getProductById = async (id) => {
     const query = 'SELECT * FROM productos WHERE id = :id;';
     const consulta = await querySelector(query, true, { id });
     if (consulta == 'undefined') {
-        return consulta[0];
-    } else {
         console.log('Product by given id does not exist!')
+    } else {
+        return consulta[0];
     }
 }
 
@@ -193,6 +168,7 @@ const deleteProduct = async (req, res) => {
 
 
 function routes(app) {
+    app.use('/productos', verifyToken)
     app.delete('/productos/:id', verifyIfProductExistsById, deleteProduct);
     app.put('/productos/:id', verifyIfProductExistsById, updateProduct);
     app.post('/productos', createProduct);

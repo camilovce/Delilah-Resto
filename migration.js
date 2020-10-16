@@ -23,7 +23,7 @@ const { db, querySelector } = require('./db');
     await db.query(
         `CREATE TABLE IF NOT EXISTS ordenes
         (id INT PRIMARY KEY AUTO_INCREMENT,
-        state VARCHAR(20) NOT NULL, 
+        state VARCHAR(20) NOT NULL DEFAULT = 'NUEVO', 
         time VARCHAR(8) NOT NULL,
         description TEXT NOT NULL, 
         payment VARCHAR(8),

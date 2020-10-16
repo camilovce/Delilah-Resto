@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const server = express();
 const cors = require('cors');
+const moment = require('moment');
 server.use(cors());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
@@ -20,7 +21,7 @@ server.listen(3000, () => {
         });
 });
 
-// console.log('Tabla creada.');
+console.log(moment().format('LT'));
 
 
 

@@ -118,6 +118,7 @@ const getUsers = async (req, res) => {
     let query = `SELECT * FROM usuarios`;
     try {
         let get = await querySelector(query, true);
+        // console.log(get[1])
         res.status(200).json({ data: get });
     } catch (error) {
         res.status(500).json({ error: "something went wrong" });
@@ -134,6 +135,7 @@ const getUsers = async (req, res) => {
 const getUserById = async (id) => {
     const query = 'SELECT * FROM usuarios WHERE id = :id;';
     const results = await querySelector(query, true, { id });
+    // console.log(results)
     return results[0];
 }
 const getUserByEmail = async (email) => {
@@ -150,6 +152,9 @@ const createU = async (userdata) => {
     let query = `INSERT INTO usuarios (user, name,email, phone, address,password)
     VALUES (:user, :name, :email,:phone, :address, :password);`;
     const result = await querySelector(query, false, userdata);
+    console.log('quiesta');
+    console.log(result[0]);
+    console.log('quiesta[0]');
     return result[0];
 }
 
@@ -268,5 +273,7 @@ function routesUsers(app) {
 
 module.exports = {
     routesUsers,
-    isUser
+    isUser,
+    verifyToken,
+    checkAdminOrId
 }
