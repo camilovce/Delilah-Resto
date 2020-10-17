@@ -173,8 +173,7 @@ function routesProducts(app) {
     app.get('/productos', getProducts);
     app.delete('/productos/:id', checkAdmin, verifyIfProductExistsById, deleteProduct);
     app.get('/productos/:id', verifyIfProductExistsById, getProductsiD);
-
-    app.put('/productos/:id', verifyIfProductExistsById, updateProduct);
+    app.put('/productos/:id', checkAdmin, verifyIfProductExistsById, updateProduct);
 }
 // *************DELETE A PRODUCT****************
 
