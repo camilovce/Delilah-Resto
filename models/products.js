@@ -1,6 +1,6 @@
-const { verify } = require('jsonwebtoken');
+// const { verify } = require('jsonwebtoken');
 const { querySelector, db } = require('../db');
-const { verifyToken } = require('../models/users');
+const { verifyToken, checkAdminOrId, checkAdmin } = require('../models/users');
 // *********************************************************
 //**************** */ PRODUCT SERVICES*******************
 // *********************************************************
@@ -168,12 +168,13 @@ const deleteProduct = async (req, res) => {
 
 
 function routesProducts(app) {
-    app.use('/productos', verifyToken)
-    app.delete('/productos/:id', verifyIfProductExistsById, deleteProduct);
-    app.put('/productos/:id', verifyIfProductExistsById, updateProduct);
-    app.post('/productos', createProduct);
+    app.use('/productos', verifyToken);
+    app.post('/productos', checkAdmin, createProduct);
     app.get('/productos', getProducts);
-    app.get('/productos/:id', getProductsiD);
+    app.delete('/productos/:id', checkAdmin, verifyIfProductExistsById, deleteProduct);
+    app.get('/productos/:id', verifyIfProductExistsById, getProductsiD);
+
+    app.put('/productos/:id', verifyIfProductExistsById, updateProduct);
 }
 // *************DELETE A PRODUCT****************
 
