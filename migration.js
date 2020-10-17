@@ -11,7 +11,7 @@ const { db } = require('./db');
     phone INT UNSIGNED NOT NULL, 
     address  VARCHAR(60) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    rol VARCHAR(60) DEFAULT ='user');`);
+    rol VARCHAR(60) DEFAULT 'user');`);
     // Products table
     await db.query(`CREATE TABLE IF NOT EXISTS productos
     (id INT PRIMARY KEY AUTO_INCREMENT, 
@@ -23,12 +23,13 @@ const { db } = require('./db');
     await db.query(
         `CREATE TABLE IF NOT EXISTS ordenes
         (id INT PRIMARY KEY AUTO_INCREMENT,
-        state VARCHAR(20) NOT NULL DEFAULT = 'NUEVO', 
-        time VARCHAR(8) NOT NULL,
+        state VARCHAR(20) NOT NULL DEFAULT 'NUEVO', 
+        time VARCHAR(20) NOT NULL,
         description TEXT NOT NULL, 
-        payment VARCHAR(8),
+        payment VARCHAR(20),
         userId INT UNSIGNED,
-        total INT NOT NULL);`
+        total INT NOT NULL,
+        address NOT NULL VARCHAR(255));`
     );
     // Orders and Products Table
     await db.query(

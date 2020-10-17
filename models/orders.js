@@ -6,26 +6,29 @@ const moment = require('moment');
 
 // ********************GET ORDER ***************************************
 
-const getO = async () => {
-    // const query = `
-    //     SELECT  state, time, payment, nombreProducto FROM ordenes 
-    //     JOIN productosOrdenes ON ordenes.id = productosOrdenes.idOrdenes 
-    //     JOIN productos ON productosOrdenes.idProductos = productos.id 
-    // `;
-    const query = `SELECT * FROM ordenes`;
-    const result = await querySelector(query, true);
-    return result[0];
-}
 
 const getOrders = async (req, res, next) => {
     try {
-        const orders = await getO();
-        // console.log(orders);
-        res.status(200).json({ data: orders });
+        // const orders = await getO();
+        const query = 'SELECT * FROM ordenes;';
+        const consulta = await querySelector(query, true,);
+        console.log(typeof consulta);
+        res.status(200).json({ data: consulta });
     } catch (error) {
+        res.status(400).json({ error: "Bad request" })
         next(error);
     }
 }
+
+/* const getProducts = async (req, res, next) => {
+    try {
+        const query = 'SELECT * FROM productos;';
+        const consulta = await querySelector(query, true,);
+        res.status(200).json({ data: consulta });
+    } catch (error) {
+        next(error);
+    }
+} */
 
 const getOrderByIdQuery = async (id) => {
     // const query = `
@@ -34,10 +37,9 @@ const getOrderByIdQuery = async (id) => {
     // JOIN productos ON productosOrdenes.idProductos = productos.id 
     //     WHERE ordenes.id = :id;
     // `;
-    const query = `SELECT * FROM ordenes
-                   WHERE ordenes.id = :id;`;
+    const query = `SELECT * FROM ordenes WHERE id = :id`;
     const result = querySelector(query, true, { id });
-    return result[0];
+    return result;
 }
 
 
@@ -46,6 +48,24 @@ const getOrderById = async (req, res, next) => {
     try {
         const order = await getOrderByIdQuery(id);
         res.status(200).json({ data: order });
+    } catch (error) {
+        next(error);
+    }
+}
+
+const verifyIfOrderExists = async (req, res, next) => {
+    const { id } = req.params;
+    console.log(id)
+    try {
+        const order = await getOrderByIdQuery(id);
+        console.log('asdfasdfasdfasdfasdf')
+        console.log(order)
+        if (!order) {
+            res.status(404).json({ error: `Order with id ${id} not found` });
+        } else {
+            next();
+        }
+
     } catch (error) {
         next(error);
     }
@@ -71,23 +91,40 @@ function listAllProperties(o) {
 }
 
 // ********************
-const descriptionCreator = async (productsiDsArray, idUser) => {
+const descriptionCreator = async (productsiDsArray) => {
 
-    let orderDescription = '';
-    let productOrderName;
+    var orderDescription = '';
+    // let productOrderName = '';
+    // let productOrderPrice = 0;
     var count = {};
+    console.log(productsiDsArray);
     productsiDsArray.forEach(function (i) { count[i] = (count[i] || 0) + 1; });
     let lenghtObj = Object.keys(count).length;
     let iDsNoRepeated = listAllProperties(count).splice(0, lenghtObj);
-    let totalOrderPrice = 0;
+    var totalOrderPrice = 0;
     const query = `SELECT nombreProducto FROM productos WHERE id = :id`;
     const queryQty = `SELECT precio FROM productos WHERE id = :id`;
-    iDsNoRepeated.forEach(async id => {
-        productOrderName = await querySelector(query, true, { id: idUser });
-        productOrderPrice = await querySelector(queryQty, true, { id: idUser })
+    let i = 0;
+    console.log(iDsNoRepeated);
+    console.log(count[6])
+    console.log(count)
+    await iDsNoRepeated.forEach(async idP => {
+        let productOrderPrice = await querySelector(queryQty, true, { id: idP });
+        console.log(productOrderPrice);
+        let productOrderName = await querySelector(query, true, { id: idP });
+        // console.log();
+        // console.log('HOPPE HOPPE REITER');
+        // console.log(count[iDsNoRepeated[i]]);
+        // console.log('HOPPE HOPPE REITER');
+        // console.log(productOrderPrice[0]);
         orderDescription += count[iDsNoRepeated[i]] + 'x' + productOrderName[0].nombreProducto + ' ';
         totalOrderPrice += count[iDsNoRepeated[i]] * productOrderPrice[0].precio;
+        console.log(totalOrderPrice + 'prueba123');
+        console.log(orderDescription + 'pruebamil');
+        i++
     });
+    console.log(orderDescription + 'prueba1234')
+    console.log(totalOrderPrice);
 
     return [orderDescription, iDsNoRepeated, totalOrderPrice];
 };
@@ -96,13 +133,15 @@ const descriptionCreator = async (productsiDsArray, idUser) => {
 
 const createO = async (iDUser, orderBody) => {
     orderBody.userId = iDUser;
-    const [orderDescription, iDsNoRepeated, totalOrderPrice] = await descriptionCreator(orderBody.products, iDUser);
+    let [orderDescription, iDsNoRepeated, totalOrderPrice] = await descriptionCreator(orderBody.products);
     // orderBody.description = await descriptionCreator(orderBody.products)[0];
     orderBody.description = orderDescription;
     orderBody.products = iDsNoRepeated;
     orderBody.total = totalOrderPrice;
     orderBody.time = moment().format('LT');
-    console.log(orderBody);
+    console.log('SONNNNEEE');
+    console.log(orderBody.description);
+    console.log('SONNNNEEE');
 
     // console.log(orderBody.description);
     const query = `
@@ -193,15 +232,15 @@ const updateOrder = async (req, res, next) => {
  ********************DELETE ORDER***************************************
  */
 const deleteO = async (id) => {
-    const query = 'DELETE FROM ResOrder WHERE id = :id';
-    await database.executeQuery(query, false, { id });
+    const query = 'DELETE FROM ordenes WHERE id = :id';
+    await querySelector(query, false, { id });
 }
 
 const deleteOrder = async (req, res, next) => {
     const { id } = req.params;
     try {
         await deleteO(id);
-        res.status(200).json({ delete: `Order number ${id} was succesfully delted!` })
+        res.status(200).json({ delete: `Order number ${id} was succesfully deleted!` })
     } catch (error) {
         next(error);
     }
@@ -274,55 +313,6 @@ const getOrderProducts = async (req, res, next) => {
  * 
  * 
  * 
- */
-
-module.exports = {
-    getOrders,
-    getOrderById,
-    createOrder,
-    updateOrder,
-    deleteOrder,
-    getUserOrders,
-    getOrderProducts
-}
-
-// *****************************************************************************
-// ******************************************************
-// ******************************************************
-// ******************************************************
-// ******************************************************
-
-
-
-
-
-const verifyIfOrderExists = async (req, res, next) => {
-    const { id } = req.params;
-    try {
-        const order = await getOrderByIdQuery(id);
-        if (!order) {
-            res.status(404).json({ error: `Order with id ${id} not found` });
-        } else {
-            next();
-        }
-
-    } catch (error) {
-        next(error);
-    }
-}
-
-// ******************************************************
-// ******************************************************
-// ******************************************************
-// ******************************************************
-// ******************************************************
-// ******************************************************
-// ******************************************************
-
-
-/**
- * 
- * @param {import('express').Express} app 
  */
 
 function routesOrders(app) {
