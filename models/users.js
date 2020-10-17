@@ -37,7 +37,7 @@ const verifyToken = async (req, res, next) => {
 *
 *
  */
-// *************CHECK ADMIN*****************
+// *************>K ADMIN*****************
 
 const checkAdmin = (req, res, next) => {
     const { rol } = req.userData;
@@ -51,8 +51,12 @@ const checkAdmin = (req, res, next) => {
 const checkAdminOrId = async (req, res, next) => {
     const { id, rol } = req.userData;
     console.log(id)
-    let parametro = req.params.userId;
-    if (id == parametro || rol == 'admin') {
+    let parametro = req.params.id;
+    console.log(parametro)
+    const orderIdEqsIdUser = `SELECT * FROM ordenes WHERE id=:parametro AND userId = :id`;
+    let checker = await querySelector(orderIdEqsIdUser, true, { id, parametro });
+    // console.log(checker[0])
+    if (id == parametro || rol == 'admin' || checker[0] != 'undefined') {
         next();
     } else {
         res.status(400).json({ error: "User has no privileges!" })
