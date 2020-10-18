@@ -7,6 +7,8 @@ const express = require('express');
 const server = express();
 const cors = require('cors');
 const moment = require('moment');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 server.use(cors());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
