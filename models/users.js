@@ -14,22 +14,28 @@ const generateToken = async (user) => {
         email: user.email,
         rol: user.rol
     };
-    console.log('GENERATE');
     const vtoken = jwt.sign(payload, 'camilo123');
     return vtoken;
 }
 
 const verifyToken = async (req, res, next) => {
-    const { authorization } = req.headers;
-    const token = authorization && authorization.split(' ')[1];
-    const userData = await jwt.verify(token, 'camilo123');
+
     // console.log(userData)
-    if (userData) {
-        req.userData = userData;
-        next();
-    } else {
-        res.status(401).json({ message: 'Invalid token' });
+    try {
+        const { authorization } = req.headers;
+        const token = authorization && authorization.split(' ')[1];
+        const userData = await jwt.verify(token, 'camilo123');
+        if (userData) {
+            req.userData = userData;
+            next();
+        } else {
+            res.status(401).json({ message: 'Invalid token' });
+
+        }
+    } catch (error) {
+        next(error)
     }
+
 }
 // *************JWT TOKEN******************
 /* 
@@ -41,22 +47,24 @@ const verifyToken = async (req, res, next) => {
 
 const checkAdmin = (req, res, next) => {
     const { rol } = req.userData;
-    if (rol === 'admin') {
-        next();
-    } else {
-        res.status(401).json({ error: 'You have no rights to make this request' });
+    try {
+        if (rol === 'admin') {
+            next();
+        } else {
+            res.status(401).json({ error: 'You have no rights to make this request' });
+        }
+    } catch (error) {
+        next(error)
     }
+
 }
 
 const checkAdminOrId = async (req, res, next) => {
     const { id, rol } = req.userData;
-    console.log(id)
-    let parametro = req.params.id;
-    console.log(parametro)
+    let parametro = req.params.userId;
     const orderIdEqsIdUser = `SELECT * FROM ordenes WHERE id=:parametro AND userId = :id`;
     let checker = await querySelector(orderIdEqsIdUser, true, { id, parametro });
-    // console.log(checker[0])
-    if (id == parametro || rol == 'admin' || checker[0] != 'undefined') {
+    if (id == parametro || rol == 'admin' || checker[0] != undefined) {
         next();
     } else {
         res.status(400).json({ error: "User has no privileges!" })
@@ -85,17 +93,15 @@ const login = async (req, res, next) => {
         if (prueba === '[]') {
             res.status(404).json({ error: `email or password are incorrect!` })
         } else {
-            // console.log(logg)
             let objetoToken = {
                 id: valuesUser.id,
                 user: valuesUser.user,
                 email: valuesUser.email,
                 rol: valuesUser.rol
             };
-            console.log('LOGIn')
-            // console.log(objetoToken)
+            console.log('LOGIN')
             let token = await generateToken(objetoToken);
-            res.status(201).json({ data: token });
+            res.status(201).json({ token });
         }
     } catch (error) {
         next(error);
@@ -139,7 +145,6 @@ const getUsers = async (req, res) => {
 const getUserById = async (id) => {
     const query = 'SELECT * FROM usuarios WHERE id = :id;';
     const results = await querySelector(query, true, { id });
-    // console.log(results)
     return results[0];
 }
 const getUserByEmail = async (email) => {

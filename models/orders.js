@@ -94,11 +94,7 @@ function listAllProperties(o) {
 
 // ********************
 const descriptionCreator = async (productsiDsArray) => {
-    // var orderDescription = '';
-    // let productOrderName = '';
-    // let productOrderPrice = 0;
     var count = {};
-    // console.log(productsiDsArray);
     productsiDsArray.forEach(function (i) { count[i] = (count[i] || 0) + 1; });
     let lenghtObj = Object.keys(count).length;
     let iDsNoRepeated = listAllProperties(count).splice(0, lenghtObj);
@@ -107,56 +103,14 @@ const descriptionCreator = async (productsiDsArray) => {
     const query = `SELECT nombreProducto FROM productos WHERE id = :id`;
     const queryQty = `SELECT precio FROM productos WHERE id = :id`;
     let i = 0;
-    // console.log(iDsNoRepeated);
-    // console.log(count[6])
-    // console.log(count);
-    var arrregloFinalValues = new Array();
     var orderDescription = "";
-    // console.log(orderDescription)
-    // await iDsNoRepeated.forEach(async idP => {
-    //     let productOrderPrice = await querySelector(queryQty, true, { id: idP });
-    //     let productOrderName = await querySelector(query, true, { id: idP });
-    //     // console.log('linea 115')
-    //     // console.log(productOrderPrice[0].precio);
-    //     // console.log(parseInt(iDsNoRepeated[0]));
-    //     // console.log(count[iDsNoRepeated[0]]);
-    //     // console.log(i);
-    //     // console.log('linea 117')
-    //     orderDescription += count[parseInt(iDsNoRepeated[i])] + 'x' + productOrderName[0].nombreProducto + ' ';
-    //     totalOP2 += count[parseInt(iDsNoRepeated[i])] * productOrderPrice[0].precio;
-    //     // console.log(totalOP2 + 'prueba123');
-    //     // console.log(orderDescription + 'pruebamil');
-    //     if (i == lenghtObj - 1) {
-    //         console.log('linea 131')
-    //         // arrregloFinalValues.push(totalOrderPrice);
-    //         console.log(arrregloFinalValues);
-    //         arrregloFinalValues.push(orderDescription);
-    //         console.log(arrregloFinalValues);
-
-    //     }
-
     for (const idP of iDsNoRepeated) {
-        // const output = await AIFoodRecognition(food);
         let productOrderPrice = await querySelector(queryQty, true, { id: idP });
         let productOrderName = await querySelector(query, true, { id: idP });
-        // console.log('linea 115')
-        // console.log(productOrderPrice[0].precio);
-        // console.log(parseInt(iDsNoRepeated[0]));
-        // console.log(count[iDsNoRepeated[0]]);
-        // console.log(i);
-        // console.log('linea 117')
         orderDescription += count[parseInt(iDsNoRepeated[i])] + 'x' + productOrderName[0].nombreProducto + ' ';
         totalOP2 += count[parseInt(iDsNoRepeated[i])] * productOrderPrice[0].precio;
-        // console.log(output);
         i++
     }
-
-    // });
-    // totalOP2 = arrregloFinalValues[0];
-    // orderDescription = arrregloFinalValues[0];
-    // console.log(totalOrderPrice);
-    console.log('linea138')
-    console.log(orderDescription);
     return { orderDescription: orderDescription, iDsNoRepeated: iDsNoRepeated, totalOrderPrice: totalOP2 };
 };
 
