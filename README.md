@@ -35,7 +35,7 @@ and for all the upcoming examples I gonna use the mentioned URL, but you can cha
 To create an user you just need a body
 ###### Method:
 ```
-###### GET
+###### POST
 ```
 ###### URL
 ```
@@ -78,6 +78,143 @@ OR
     "user": "milo@gmail.com",
     "password": "camilo1234"
 }
+```
+
+#### Update user by ID
+You need to provide a valid user ID and proper JWT to be able to update an user. Either if you are an admin or the user that is logged in you will be able to perform this operation.
+##### Method
+```
+PUT
+```
+
+##### URL
+```
+127.0.0.1:3000/usuarios/1
+```
+##### Body structure:
+
+```
+{
+    "user": "andres23f3",
+    "name": "camilo valbuena4",
+    "email": "milov@gmaile.com",
+    "phone": "31934824010",
+    "address": "DG 59 11 A 90",
+    "password": "camilo1234"
+}
+```
+#### Get all registered users
+Token must be from an admin.
+##### Method
+```
+GET
+```
+##### URL
+```
+127.0.0.1:3000/usuarios
+```
+#### Delete User by ID
+Only an admin can delete an user
+
+##### Method
+```
+DELETE
+```
+##### URL
+1 indicates user ID value
+```
+127.0.0.1:3000/usuarios/1
+```
+#### Get User by ID
+Only an admin or an logged user whose ID is equal to the id parameter used in the URL can perform this action.
+
+##### Method
+```
+GET
+```
+##### URL
+1 indicates user ID value
+```
+127.0.0.1:3000/usuarios/1
+```
+
+### Products
+#### Create a product
+To create a product you just need a body
+###### Method:
+```
+###### POST
+```
+###### URL
+```
+127.0.0.1:3000/productos
+```
+###### Body structure:
+"cantidad" is just a representative value with no particular utility
+```
+{
+    "nombreProducto": "BandejaPaisa",
+    "precio": "315",
+    "cantidad": "48"
+}
+```  
+
+#### Update product by ID
+You need to provide a proper JWT to be able to update an product. Only if you are an admin you will be able to perform this operation.
+##### Method
+```
+PUT
+```
+
+##### URL
+Number 1 indicate the value of product ID, you can use any value to get any other product
+```
+127.0.0.1:3000/productos/1
+```
+##### Body structure:
+
+```
+{
+    "nombreProducto": "BandejaPaisa",
+    "precio": "315",
+    "cantidad": "8"
+}
+```
+#### Get all products
+If an admmin or an user are logged you can get all list of products
+##### Method
+```
+GET
+```
+##### URL
+```
+127.0.0.1:3000/products
+```
+#### Delete Product by ID
+Only an admin can delete an user
+
+##### Method
+```
+DELETE
+```
+##### URL
+1 indicates user ID value
+```
+127.0.0.1:3000/productos/1
+```
+#### Get Product by ID
+Only a logged user can perform this action.
+
+##### Method
+```
+GET
+```
+##### URL
+1 indicates user ID value
+```
+127.0.0.1:3000/usuarios/1
+```
+
 
 
 
