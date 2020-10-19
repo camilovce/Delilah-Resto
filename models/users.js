@@ -19,8 +19,6 @@ const generateToken = async (user) => {
 }
 
 const verifyToken = async (req, res, next) => {
-
-    // console.log(userData)
     try {
         const { authorization } = req.headers;
         const token = authorization && authorization.split(' ')[1];
@@ -30,12 +28,10 @@ const verifyToken = async (req, res, next) => {
             next();
         } else {
             res.status(401).json({ message: 'Invalid token' });
-
         }
     } catch (error) {
         next(error)
     }
-
 }
 // *************JWT TOKEN******************
 /* 
@@ -79,7 +75,13 @@ const checkAdminOrId = async (req, res, next) => {
 // *************LOGIN*****************
 
 const verifyUserPass = async (user, password) => {
-    let query = `SELECT * FROM usuarios WHERE user = :user AND password= :password`
+    console.log(user.indexOf('@'));
+    let query;
+    if (user.indexOf('@') === -1) {
+        query = `SELECT *  FROM  usuarios WHERE password= :password AND user=:user`;
+    } else if (user.indexOf('@') >= 0) {
+        query = `SELECT *  FROM  usuarios WHERE password= :password AND email=:user`;
+    }
     let resultado = await querySelector(query, true, { user, password });
     return resultado;
 }

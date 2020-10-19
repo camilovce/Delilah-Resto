@@ -1,17 +1,17 @@
 const { db } = require('./db');
 
-
 (async () => {
     // Users table
     await db.query(`CREATE TABLE IF NOT EXISTS usuarios
-    (id INT PRIMARY KEY AUTO_INCREMENT, 
-    user VARCHAR (60) UNIQUE NOT NULL,
-    name VARCHAR (60) NOT NULL, 
-    email VARCHAR (60) UNIQUE NOT NULL,  
+    (id INT AUTO_INCREMENT PRIMARY KEY, 
+    user VARCHAR(60) UNIQUE NOT NULL,
+    name VARCHAR(60) NOT NULL, 
+    email VARCHAR(60) UNIQUE NOT NULL,  
     phone INT UNSIGNED NOT NULL, 
     address  VARCHAR(60) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    rol VARCHAR(60) DEFAULT 'user');`);
+    rol VARCHAR(60) DEFAULT 'user')`);
+
     // Products table
     await db.query(`CREATE TABLE IF NOT EXISTS productos
     (id INT PRIMARY KEY AUTO_INCREMENT, 
@@ -19,6 +19,7 @@ const { db } = require('./db');
     precio INT UNSIGNED, 
     cantidad INT UNSIGNED);`
     );
+
     // Orders table
     await db.query(
         `CREATE TABLE IF NOT EXISTS ordenes
@@ -29,21 +30,16 @@ const { db } = require('./db');
         payment VARCHAR(20),
         userId INT UNSIGNED,
         total INT NOT NULL,
-        address NOT NULL VARCHAR(255));`
+        address VARCHAR(255) NOT NULL);`
     );
-    // Orders and Products Table
+
+    // Orders and Products Join Table
     await db.query(
         `CREATE TABLE IF NOT EXISTS productosOrdenes
-        (idProductos INT NOT NULL AUTO_INCREMENT,
-        idOrdenes INT NOT NULL AUTO_INCREMENT,
-        PRIMARY KEY(idProductos,idOrdenes)
-    )` );
-
-    // console.log(`Tablas Creadas con éxito!`)
-    // const [ordenes] = await db.query(
-    //     `SELECT * FROM productos`,
-    //     { raw: true },
-    // );
-    // console.log(ordenes);
+        (idProductos INT NOT NULL,
+        idOrdenes INT NOT NULL,
+        idOP INT NOT NULL AUTO_INCREMENT,
+        PRIMARY KEY(idOP))`
+    );
 })();
 
