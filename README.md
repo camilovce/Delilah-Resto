@@ -230,11 +230,6 @@ GET
 127.0.0.1:3000/productos/1
 ```
 
-
-
-
-
-
 ### Orders
 
 #### Create an Order
@@ -266,7 +261,7 @@ PUT
 ##### URL
 Number 1 indicates the value of order ID, you can use any value to get any other order
 ```
-127.0.0.1:3000//ordenes/1
+127.0.0.1:3000/ordenes/1
 ```
 ##### Body structure:
 
