@@ -31,10 +31,12 @@ For all endpoints that I created I used the next port and host URL
 ```
 and for all the upcoming examples I gonna use the mentioned URL, but you can change any value if you prefer so.
 #### JSON WEB TOKEN USED
-Next JWT are generated using provided .CSV data in this project.
+Next JWT were generated using provided .CSV data in this project.
+
 For admin
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc
+
 ```
 For user
 ```
