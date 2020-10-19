@@ -306,9 +306,9 @@ function routesOrders(app) {
 
     app.put('/ordenes/:id', checkAdminOrId, verifyIfOrderExists, updateOrder);
 
-    app.delete('/ordenes/:id', checkAdminOrId, verifyIfOrderExists, deleteOrder);
+    app.delete('/ordenes/:id', checkAdmin, verifyIfOrderExists, deleteOrder);
 
-    app.get('/ordenes/usuarios/:id', verifyToken, checkAdminOrId, getUserOrders);
+    app.get('/ordenes/usuarios/:id', checkAdmin, getUserOrders);
 
     app.get('/ordenes/:id/productos', checkAdminOrId, verifyIfOrderExists, getOrderProducts);
 }
