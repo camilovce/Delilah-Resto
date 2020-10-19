@@ -1,0 +1,245 @@
+{
+	"info": {
+		"_postman_id": "ace079fc-5c9b-4ef7-b40b-cb639658a3df",
+		"name": "Productos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Crear producto",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombreProducto\": \"BandejaPaisa\",\r\n    \"precio\": \"315\",\r\n    \"cantidad\": \"48\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Puerto}}/productos",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"productos"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Details about a user",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user?id=<integer>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "<integer>"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "x-next",
+							"value": "elit non",
+							"description": "A link to the next page of responses"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"id\": -51376909,\n \"name\": \"enim sed pariatur\",\n \"tag\": \"qui laboris\"\n}"
+				},
+				{
+					"name": "unexpected error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user?id=<integer>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "<integer>"
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"code\": -36728457,\n \"message\": \"commodo cillu\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Obtener Todos los Productos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/productos",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"productos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Borrar un Producto de la Lista",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/productos/12",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"productos",
+						"12"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Productos por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/productos/11",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"productos",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar un Producto",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombreProducto\": \"BandejaPaisa\",\r\n    \"precio\": \"315\",\r\n    \"cantidad\": \"8\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Puerto}}/productos/11",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"productos",
+						"11"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "baseUrl",
+			"key": "baseUrl",
+			"value": "http://petstore.swagger.io/v1",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

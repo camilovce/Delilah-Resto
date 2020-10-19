@@ -1,0 +1,193 @@
+{
+	"info": {
+		"_postman_id": "4207b042-0a04-4a88-b94f-97a791ecc037",
+		"name": "Ordenes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Crear Orden",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"payment\":\"No CASH\",\r\n    \"products\": [1,4,4,6,7,1],\r\n    \"address\":\"CALLE FALSA 123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Puerto}}/ordenes",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"ordenes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obterner todas las ordenes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/ordenes",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"ordenes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Borrar Orden por ID",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/ordenes/1",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"ordenes",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar Orden",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw",
+						"description": "User access",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"payment\":\"CASH\",\r\n    \"products\": [1,4,4,6],\r\n    \"address\":\"CALLE FALSA 123\",\r\n    \"state\" : \"USADO\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Puerto}}/ordenes/3",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"ordenes",
+						"3"
+					]
+				},
+				"description": "Actualiza una orden dado el id de la orden en cuestión"
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener ordenes por usuario",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/ordenes/usuarios/1",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"ordenes",
+						"usuarios",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Productos por Orden",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/ordenes/3/productos",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"ordenes",
+						"3",
+						"productos"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

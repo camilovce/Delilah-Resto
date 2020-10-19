@@ -1,0 +1,280 @@
+{
+	"info": {
+		"_postman_id": "15ded5d2-89cb-4004-9de8-b6e3a922e9c2",
+		"name": "Usuarios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"milovlbc@gmail.com\",\r\n    \"password\": \"camilo1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Puerto}}/usuarios/signin",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"usuarios",
+						"signin"
+					]
+				},
+				"description": "Permite que el usuario se loguee y genera un json web token si el usuario se valida correctamente."
+			},
+			"response": [
+				{
+					"name": "Login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"andres23f3\",\r\n    \"password\": \"camilo1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Puerto}}/usuarios/signin",
+							"host": [
+								"{{Puerto}}"
+							],
+							"path": [
+								"usuarios",
+								"signin"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "208"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"d0-GjdGsMxGOkzWZJ6iEQXR+dUZQoY\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 18 Oct 2020 15:49:02 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsInVzZXIiOiJhbmRyZXMyM2YzIiwiZW1haWwiOiJtaWxvdmxiY0BnbWFpbDNlLmNvbSIsInJvbCI6IiIsImlhdCI6MTYwMzAzNjE0Mn0.dA9j6YmRQS3dUGupDnJaKAYQUXxXxsL7BU0cZi44Mkc\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Obtener todos los usuarios",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "Con un token de administrador se obtiene el listado de todos los usuarios."
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": \"andres23f3\",\r\n    \"name\": \"camilo valbuena4\",\r\n    \"email\": \"milovlbc@gmail3e.com\",\r\n    \"phone\": \"31934824010\",\r\n    \"address\": \"DG 59 11 A 90\",\r\n    \"password\": \"camilo1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3000/usuarios",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"usuarios"
+					]
+				},
+				"description": "Endpoint para crear usuarios en la base de datos del restaurante"
+			},
+			"response": [
+				{
+					"name": "Crear Usuario Ejemplo",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": \"andres23f3\",\r\n    \"name\": \"camilo valbuena4\",\r\n    \"email\": \"milovlbc@gmail3e.com\",\r\n    \"phone\": \"31934824010\",\r\n    \"address\": \"DG 59 11 A 90\",\r\n    \"password\": \"camilo1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:3000/usuarios",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"28-PrHaMn0O/fLGijJzB2WBWjECuKE\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 18 Oct 2020 14:00:55 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"andres23f3 is already taken!\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Actualizar datos de un usuario por ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": \"andres23f3\",\r\n    \"name\": \"camilo valbuena4\",\r\n    \"email\": \"milovlbc@gmail3e.com\",\r\n    \"phone\": \"31934824010\",\r\n    \"address\": \"DG 59 11 A 90\",\r\n    \"password\": \"camilo1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Puerto}}/usuarios/1",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"usuarios",
+						"1"
+					]
+				},
+				"description": "Actualiza los datos de un usuario dado un ID.\r\nSolo se permite actualizar a un administrador a un usuario cuyo ID conincida con el ID de la petición."
+			},
+			"response": []
+		},
+		{
+			"name": "Borrar Usuario",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc",
+						"description": "admin access",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Puerto}}/usuarios",
+					"host": [
+						"{{Puerto}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				},
+				"description": "Borra un usuario por su ID unico. Solo un administrador podra borrar a un usuario"
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener usuario por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "Dado un ID si corresponde al ID del usuario registrado o si un administrador es quien hace la peticion se mostrará la información del usuario"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

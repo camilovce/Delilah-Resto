@@ -119,20 +119,10 @@ const descriptionCreator = async (productsiDsArray) => {
 const createO = async (iDUser, orderBody) => {
     orderBody.userId = iDUser;
     let descriptionAndTotal = await descriptionCreator(orderBody.products);
-    console.log(descriptionAndTotal)
-    // const { orderDescription, iDsNoRepeated, totalOP2 } = await descriptionCreator(orderBody.products);
-    // orderBody.description = await descriptionCreator(orderBody.products)[0];
-    console.log('linea 141')
     orderBody.description = descriptionAndTotal.orderDescription;
-    console.log(orderBody.description);
     orderBody.products = descriptionAndTotal.iDsNoRepeated;
     orderBody.total = descriptionAndTotal.totalOrderPrice;
     orderBody.time = moment().format('LT');
-    console.log('SONNNNEEE');
-    // console.log(orderBody.description);
-    console.log('SONNNNEEE');
-
-    // console.log(orderBody.description);
     const query = `
         INSERT INTO ordenes (time, description, payment, userId, total,address)
         VALUES (:time, :description, :payment, :userId, :total,:address);
@@ -144,7 +134,6 @@ const createO = async (iDUser, orderBody) => {
         INSERT INTO productosOrdenes (idOrdenes, idProductos)
         VALUES (:idOrdenes, :idProductos)
     `;
-    // console.log(result)
     orderBody.products.forEach(async idProductos => {
         await querySelector(orderProductQuery, false, { idOrdenes: result[0], idProductos });
     });
@@ -156,7 +145,6 @@ const createOrder = async (req, res, next) => {
     console.log(req.userData)
     const { id } = req.userData;
     const { payment, products, address } = req.body;
-    // console.log(description)
     if (payment && products && address) {
         try {
             const orderId = await createO(id, req.body);
@@ -185,9 +173,6 @@ const updateO = async (id, orderBody) => {
 
     const { state, products } = orderBody;
     const order = await getOrderByIdQuery(id);
-    console.log('Linea 201')
-    // console.log(order[0].products)
-    console.log('Linea 203')
     const [orderDescription] = await descriptionCreator(products);
     const query = `
         UPDATE ordenes
