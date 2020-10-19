@@ -24,8 +24,61 @@ I have also added the 3 Postman collections in which all of the available endpoi
 _Note_: all parameters that you need to properly connect with the databe are located in `db.js`file.
 
 ## Endpoints
-For all endpoints I created I used the next port and host URL
+For all endpoints that I created I used the next port and host URL
 
 ```javascript
 127.0.0.1:3000/
 ```
+and for all the upcoming examples I gonna use the mentioned URL, but you can change any value if you prefer so.
+### Users
+#### Create an user
+To create an user you just need a body
+###### Method:
+```
+###### GET
+```
+###### URL
+```
+127.0.0.1:3000/usuarios
+```
+###### Body structure:
+
+```
+{
+    "user": "andres23f3",
+    "name": "camilo valbuena4",
+    "email": "camilo@gmail.com",
+    "phone": "31934824010",
+    "address": "DG 59 11 A 90",
+    "password": "camilo1234"
+}
+```
+#### Login
+One of the main endpoints is the login. It allows you to obtain a json web token to implemen in the majority of the other endpoints. 
+It will not work if you enter password, user or email incorrectly. In this case `user` property can be both "email" or "user" values.
+###### Method:
+```
+###### POST
+```
+###### URL
+```
+127.0.0.1:3000/usuarios
+```
+###### Body structure:
+
+```
+{
+    "user": "camilov",
+    "password": "camilo1234"
+}
+```
+OR
+```
+{
+    "user": "milo@gmail.com",
+    "password": "camilo1234"
+}
+
+
+
+
