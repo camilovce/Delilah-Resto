@@ -30,6 +30,20 @@ For all endpoints that I created I used the next port and host URL
 127.0.0.1:3000/
 ```
 and for all the upcoming examples I gonna use the mentioned URL, but you can change any value if you prefer so.
+#### JSON WEB TOKEN USED
+Next JWT are generated using provided .CSV data in this project.
+For admin
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIiLCJlbWFpbCI6Im1pbG92bGJjQGdtYWlsLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNjAyNjEwMzUyfQ.xnw7WfGXMdazhsq7RQsJcjSXmwuYVstJF111y8QrBmc
+```
+For user
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlciI6ImFuZHJlczIzZiIsImVtYWlsIjoibWlsb3ZsYmNAZ21haWwzLmNvbSIsInJvbCI6InVzZXIiLCJpYXQiOjE2MDI2MTM4MTN9.iORJtO6v7-A56I9JFaXaI_Gws9bvIQtFmmzLngKZ9Uw
+```
+SQL code to asign 'admin' value to "usuarios" table _rol_ column.
+```
+UPDATE `delilah`.`usuarios` SET `rol` = 'admin' WHERE (`id` = '2');
+```
 ### Users
 #### Create an user
 To create an user you just need a body
@@ -143,7 +157,7 @@ GET
 To create a product you just need a body
 ###### Method:
 ```
-###### POST
+ POST
 ```
 ###### URL
 ```
@@ -165,7 +179,6 @@ You need to provide a proper JWT to be able to update an product. Only if you ar
 ```
 PUT
 ```
-
 ##### URL
 Number 1 indicate the value of product ID, you can use any value to get any other product
 ```
@@ -191,7 +204,7 @@ GET
 127.0.0.1:3000/products
 ```
 #### Delete Product by ID
-Only an admin can delete an user
+Only an admin can delete a product
 
 ##### Method
 ```
@@ -210,12 +223,117 @@ Only a logged user can perform this action.
 GET
 ```
 ##### URL
-1 indicates user ID value
+1 indicates product ID value
 ```
-127.0.0.1:3000/usuarios/1
+127.0.0.1:3000/productos/1
 ```
 
 
 
+
+
+
+### Orders
+
+#### Create an Order
+To create an order you just need a body
+###### Method:
+```
+ POST
+```
+###### URL
+```
+127.0.0.1:3000/ordenes
+```
+###### Body structure:
+"payment" can be any value, "products" is an array that has all products IDs selected in the order, and those IDs can be repeated, address is a string.
+All this three values are required.
+```
+{
+    "payment":"CASH",
+    "products": [1,4,4,6,7,1],
+    "address":"CALLE FALSA 123"
+}
+```  
+#### Update order by ID
+Only if you are an admin you will be able to perform this operation.
+##### Method
+```
+PUT
+```
+##### URL
+Number 1 indicates the value of order ID, you can use any value to get any other order
+```
+127.0.0.1:3000//ordenes/1
+```
+##### Body structure:
+
+```
+{
+    "payment":"CASH",
+    "products": [1,4,4,6],
+    "address":"CALLE FALSA 123",
+    "state" : "USADO"
+}
+```
+#### Get all orders
+If an admmin is logged in you can get all list of orders
+##### Method
+```
+GET
+```
+##### URL
+```
+127.0.0.1:3000/ordenes
+```
+#### Delete Order by ID
+Either an admin or user whose order ID corresponds with Id parameter in URL can perform this operation
+
+##### Method
+```
+DELETE
+```
+##### URL
+1 indicates order ID value
+```
+127.0.0.1:3000/ordenes/1
+```
+#### Get Order by ID
+Either an admin or user whose order ID corresponds with Id parameter in URL can perform this operation
+
+##### Method
+```
+GET
+```
+##### URL
+1 indicates product ID value
+```
+127.0.0.1:3000/ordenes/1
+```
+
+#### Get Order by User
+Either an admin or user whose order ID corresponds with Id parameter in URL can perform this operation
+
+##### Method
+```
+GET
+```
+##### URL
+1 indicates product ID value
+```
+127.0.0.1:3000/ordenes/usuarios/1
+```
+#### Get Products by Order ID
+Either an admin or user whose order ID corresponds with Id parameter in URL can perform this operation
+
+##### Method
+```
+GET
+```
+##### URL
+1 indicates product ID value
+```
+127.0.0.1:3000/ordenes/1/productos
+```
 
 
