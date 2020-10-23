@@ -57,7 +57,7 @@ const checkAdmin = (req, res, next) => {
 
 const checkAdminOrId = async (req, res, next) => {
     const { id, rol } = req.userData;
-    let parametro = req.params.userId;
+    const parametro = req.params.id || req.params.userId;
     const orderIdEqsIdUser = `SELECT * FROM ordenes WHERE id=:parametro AND userId = :id`;
     let checker = await querySelector(orderIdEqsIdUser, true, { id, parametro });
     if (id == parametro || rol == 'admin' || checker[0] != undefined) {

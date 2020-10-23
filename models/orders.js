@@ -173,7 +173,8 @@ const updateO = async (id, orderBody) => {
 
     const { state, products } = orderBody;
     const order = await getOrderByIdQuery(id);
-    const [orderDescription] = await descriptionCreator(products);
+    console.log(products);
+    const { orderDescription } = await descriptionCreator(products);
     const query = `
         UPDATE ordenes
         SET description = '${orderDescription || order.description}',
