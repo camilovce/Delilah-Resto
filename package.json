@@ -22,7 +22,9 @@
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
+    "mysql2": "^2.2.5",
     "nodemon": "^2.0.5",
+    "sequelize": "^6.3.5",
     "swagger-jsdoc": "^4.3.0",
     "swagger-ui-express": "^4.1.4"
   }
